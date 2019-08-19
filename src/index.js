@@ -8,10 +8,10 @@ import App from './app';
 const history = createHistory();
 import { configureStore } from './store/configure-store';
 
-const initialState = {};
+const initialState = window.INITIAL_STATE || {};
+delete window.INITIAL_STATE;
 
 history.listen(location => {
-  console.log(location);
   window.scrollTo(0, 0);
 });
 
