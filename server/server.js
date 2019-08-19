@@ -1,12 +1,13 @@
-import express from "express";
-import helmet from "helmet";
-import responseTime from "response-time";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import bodyParser from "body-parser";
-import handlebars from "express-handlebars";
-
-require("./setup").setup();
+import path from 'path';
+import express from 'express';
+import helmet from 'helmet';
+import responseTime from 'response-time';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import handlebars from 'express-handlebars';
+import { handleCSR } from './handleCSR';
+require('./setup').setup();
 
 const app = express();
 const router = express.Router();
@@ -18,33 +19,54 @@ router.use(cookieParser());
 
 app.use(
   bodyParser.urlencoded({
-    extended: false
+    extended: false,
   })
 );
 app.use(
   bodyParser.json({
-    limit: "5mb"
+    limit: '5mb',
   })
 );
 
 app.engine(
-  "html",
+  'html',
   handlebars({
     helpers: {
-      toJson: object => JSON.stringify(object)
-    }
+      toJson: object => JSON.stringify(object),
+    },
   })
 );
-app.set("view engine", "html");
+app.set('view engine', 'html');
 
-require("./routes")(router);
+router.use(
+  express.static(path.join(__dirname, '../', 'dist'), {
+    redirect: false,
+  })
+);
+router.use(
+  express.static(path.join(__dirname, '../', 'assets'), {
+    redirect: false,
+  })
+);
+
+app.use((req, res, next) => {
+  if (req.url == '/') {
+    res.redirect('/home');
+    return;
+  }
+  next();
+});
+
+require('./routes')(router);
+
+router.get('*', handleCSR);
 
 app.use(router);
 
 app.shutdown = () => {
-  require("./setup").teardown(); // eslint-disable-line global-require
+  require('./setup').teardown(); // eslint-disable-line global-require
 };
 
 module.exports = {
-  app
+  app,
 };
