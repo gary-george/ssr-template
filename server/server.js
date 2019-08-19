@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import handlebars from 'express-handlebars';
 import { handleSSR } from './handleSSR.js';
 import { handleCSR } from './handleCSR.js';
+const { env } = require('../config');
 
 require('./setup').setup();
 
@@ -61,23 +62,25 @@ app.use((req, res, next) => {
 
 require('./routes')(router);
 
-// Server Side Rendering 🚀
-router.use('*', handleSSR);
+if (env.SERVER_RENDERED) {
+  // Server Side Rendering 🚀
+  router.use('*', handleSSR);
+} else {
+  // Client Side Rendering 🚨
+  /*
+    If SSR not required you can just use handleCSR instead for fully client side rendering.
+    For non SSR we need to use WithRouter HOC around component exports.
+    WithRouter allows us to get the 'history' object and the closest route match.
 
-// Client Side Rendering 🚨
-/*
-If SSR not required you can just use handleCSR instead for fully client side rendering.
-For non SSR we need to use WithRouter HOC around component exports.
-WithRouter allows us to get the 'history' object and the closest route match.
-
-Example:
-  import {withRouter } from 'react-router-dom';
-  export default withRouter(connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(PageComponent));
-*/
-// router.get('*', handleCSR);
+    Example:
+      import {withRouter } from 'react-router-dom';
+      export default withRouter(connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(PageComponent));
+  */
+  router.get('*', handleCSR);
+}
 
 app.use(router);
 
