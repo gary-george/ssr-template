@@ -42,4 +42,4 @@ There are two scripts you can run to start the project:
 
 Check out the blog post for a more detailed explanation of whats going on:
 
-- [LINK IN PROGRESS](https://google.com)
+- [Blog Post](https://medium.com/@garygeorge84/server-side-rendering-418a63928571)
