@@ -55,7 +55,7 @@
     "redux-saga": "0.16.0",
     "response-time": "2.3.2",
     "sass-loader": "6.0.7",
-    "serialize-javascript": "1.6.1",
+    "serialize-javascript": "2.1.1",
     "url-loader": "2.0.1"
   }
 }
