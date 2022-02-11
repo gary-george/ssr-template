@@ -35,7 +35,7 @@
     "cors": "2.8.4",
     "css-loader": "0.28.11",
     "envalid": "4.1.2",
-    "express-handlebars": "3.0.0",
+    "express-handlebars": "5.3.1",
     "file-loader": "4.0.0",
     "helmet": "3.10.0",
     "history": "4.7.2",
